@@ -59,16 +59,12 @@ public class Test {
 
     @org.junit.Test
     public void testa() throws InterruptedException {
-        ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(5);
-        scheduledThreadPool.scheduleAtFixedRate(
-                () ->{System.out.println("delay 1 seconds, and excute every 3 seconds");
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                },
-                0, 500, TimeUnit.MILLISECONDS);
-        Thread.sleep(999999);
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
+        ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(2, namedThreadFactory);
+        scheduledThreadPoolExecutor.scheduleAtFixedRate(() -> {
+
+        }, 0, 500, TimeUnit.MILLISECONDS);
+        Thread.sleep(99999999);
     }
+
 }

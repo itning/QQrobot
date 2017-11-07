@@ -3,6 +3,7 @@ package top.itning.webqq.client;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.dongliu.requests.Client;
 import net.dongliu.requests.HeadOnlyRequestBuilder;
 import net.dongliu.requests.Response;
@@ -20,6 +21,9 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /***
  *
@@ -101,23 +105,25 @@ public class SmartQQClient implements Closeable {
         login();
         if (callback != null) {
             this.pollStarted = true;
-            new Thread(() -> {
-                while (true) {
-                    if (!pollStarted) {
-                        return;
-                    }
-                    try {
-                        pollMessage(callback);
-                    } catch (RequestException e) {
-                        //忽略SocketTimeoutException
-                        if (!(e.getCause() instanceof SocketTimeoutException)) {
+            ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
+            ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(2, namedThreadFactory);
+            scheduledThreadPoolExecutor.scheduleAtFixedRate(
+                    () -> {
+                        if (!pollStarted) {
+                            return;
+                        }
+                        try {
+                            pollMessage(callback);
+                        } catch (RequestException e) {
+                            //忽略SocketTimeoutException
+                            if (!(e.getCause() instanceof SocketTimeoutException)) {
+                                LOGGER.error(e.getMessage());
+                            }
+                        } catch (Exception e) {
                             LOGGER.error(e.getMessage());
                         }
-                    } catch (Exception e) {
-                        LOGGER.error(e.getMessage());
-                    }
-                }
-            }).start();
+                    },
+                    0, 500, TimeUnit.MILLISECONDS);
         }
     }
 
