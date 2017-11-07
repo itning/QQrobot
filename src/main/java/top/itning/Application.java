@@ -1,4 +1,4 @@
-package top.itning.webqq;
+package top.itning;
 
 
 import org.apache.log4j.Logger;
