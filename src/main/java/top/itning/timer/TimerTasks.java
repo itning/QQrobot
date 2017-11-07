@@ -4,29 +4,37 @@ import net.dongliu.requests.exception.RequestException;
 import top.itning.curriculum.CurriculumClient;
 import top.itning.weather.client.WeatherInfoClient;
 import top.itning.webqq.client.SmartQQClient;
+import top.itning.webqq.model.Group;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * @author wangn
  */
 public class TimerTasks {
     private SmartQQClient client;
-    private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
-    //private static final long PERIOD_DAY = 5000;
+    //private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
+    private static final long PERIOD_DAY = 10 * 60 * 1000;
 
     class Task extends TimerTask {
 
         @Override
         public void run() {
+            long groupId = 0;
+            List<Group> groupList = client.getGroupList();
+            for (Group group : groupList) {
+                if ("╭ァ編徎縱扖門到瓬棄".equals(group.getName())) {
+                    groupId = group.getId();
+                }
+            }
+            if (groupId == 0) {
+                throw new RuntimeException("group id = 0");
+            }
             System.out.println("run!!!");
             String msg;
             if ((msg = WeatherInfoClient.getFormatWeatherInfo()) != null) {
                 try {
-                    client.sendMessageToGroup(698691135, msg);
+                    client.sendMessageToGroup(groupId, msg);
                 } catch (RequestException e) {
                     System.out.println("java.net.SocketException: Socket Closed");
                 }
@@ -36,7 +44,7 @@ public class TimerTasks {
             System.out.println(classInfo);
             if (!"".equals(classInfo)) {
                 try {
-                    client.sendMessageToGroup(698691135, classInfo);
+                    client.sendMessageToGroup(groupId, classInfo);
                 } catch (RequestException e) {
                     System.out.println("java.net.SocketException: Socket Closed");
                 }

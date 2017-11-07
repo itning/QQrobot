@@ -5,11 +5,10 @@ import org.apache.log4j.Logger;
 import top.itning.timer.TimerTasks;
 import top.itning.webqq.callback.MessageCallback;
 import top.itning.webqq.client.SmartQQClient;
-import top.itning.webqq.model.DiscussMessage;
-import top.itning.webqq.model.GroupMessage;
-import top.itning.webqq.model.Message;
+import top.itning.webqq.model.*;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author ScienJus
@@ -45,8 +44,20 @@ public class Application {
     });
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        // client.getGroupList().forEach(System.out::println);
-        //client.getFriendList().forEach(System.out::println);
+        long userId = 0;
+        List<Category> friendListWithCategory = client.getFriendListWithCategory();
+        for (Category c : friendListWithCategory) {
+            List<Friend> friends = c.getFriends();
+            for (Friend friend : friends) {
+                if ("她姓许º".equals(friend.getNickname()) && friend.getUserId() != 1837634447) {
+                    userId = friend.getUserId();
+                }
+            }
+        }
+        if (userId == 0) {
+            throw new RuntimeException("user id = 0");
+        }
+        System.out.println(userId);
         if (args.length != 3) {
             LOGGER.error("args-->" + args.length);
             return;
@@ -56,16 +67,16 @@ public class Application {
             argsInt[i] = Integer.parseInt(args[i]);
         }
         System.out.println(2);
-        client.sendMessageToGroup(698691135, "已开启");
-        client.sendMessageToFriend(1911338, "1");
+        client.sendMessageToFriend(userId, "已开启");
         new TimerTasks(client, argsInt);
-        client.sendMessageToFriend(1911338, "1");
+        client.sendMessageToFriend(userId, "1");
         System.out.println(2);
     }
 
     private static void close() {
         try {
             client.close();
+            System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
         }
