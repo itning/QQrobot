@@ -34,9 +34,14 @@ public class Application {
     private static SmartQQClient client = new SmartQQClient(new MessageCallback() {
         @Override
         public void onMessage(Message message) {
-            if (User_ID == message.getUserId() && CLOSE_COMMAND.equals(message.getContent())) {
-                client.sendMessageToFriend(User_ID, "关闭成功");
-                close();
+            if (User_ID == message.getUserId()) {
+                if (CLOSE_COMMAND.equals(message.getContent())) {
+                    client.sendMessageToFriend(User_ID, "关闭成功");
+                    close();
+                } else {
+                    client.sendMessageToFriend(User_ID, message.getContent());
+                }
+
             }
         }
 
