@@ -55,7 +55,6 @@ public class TimerTasks {
 
             }
             String classInfo = CurriculumClient.getClassInfo();
-            System.out.println(classInfo);
             if (!"".equals(classInfo)) {
                 try {
                     client.sendMessageToGroup(groupId, classInfo);

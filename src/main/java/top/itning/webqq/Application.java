@@ -38,6 +38,7 @@ public class Application {
         @Override
         public void onMessage(Message message) {
             if (User_ID == message.getUserId() && CLOSE_COMMAND.equals(message.getContent())) {
+                client.sendMessageToFriend(User_ID, "关闭成功");
                 close();
             }
         }
@@ -67,6 +68,7 @@ public class Application {
             throw new RuntimeException("user id = 0");
         }
         LOGGER.debug("已获取到User_ID-->" + User_ID);
+        client.sendMessageToFriend(User_ID, "已获取到User_ID-->" + User_ID);
         if (args.length != ARGS_LENGTH) {
             LOGGER.error("args-->" + args.length);
             return;
