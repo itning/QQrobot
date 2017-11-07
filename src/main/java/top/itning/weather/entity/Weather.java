@@ -1,8 +1,11 @@
 package top.itning.weather.entity;
 
-/**
- * @author wangn
- */
+/***
+ *
+ * @author : ning
+ * @version : 1.0.0
+ * @date :   2017/11/7
+**/
 public class Weather {
     private String date;
     private String message;

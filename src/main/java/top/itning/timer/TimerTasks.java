@@ -1,6 +1,7 @@
 package top.itning.timer;
 
 import net.dongliu.requests.exception.RequestException;
+import org.apache.log4j.Logger;
 import top.itning.curriculum.CurriculumClient;
 import top.itning.weather.client.WeatherInfoClient;
 import top.itning.webqq.client.SmartQQClient;
@@ -8,18 +9,31 @@ import top.itning.webqq.model.Group;
 
 import java.util.*;
 
-/**
- * @author wangn
- */
+/***
+ * 定时器任务类
+ * @author : ning
+ * @version : 1.0.0
+ * @date :   2017/11/7
+ **/
 public class TimerTasks {
+    private static final Logger LOGGER = Logger.getLogger(TimerTasks.class);
     private SmartQQClient client;
-    //private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
-    private static final long PERIOD_DAY = 10 * 60 * 1000;
+    /**
+     * 重复周期;单位ms
+     */
+    private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
 
+    /***
+     * 任务线程
+     * @author : ning
+     * @version : 1.0.0
+     * @date :   2017/11/7
+     **/
     class Task extends TimerTask {
 
         @Override
         public void run() {
+            // 每次登陆后ID会变 所以动态获取ID
             long groupId = 0;
             List<Group> groupList = client.getGroupList();
             for (Group group : groupList) {
@@ -27,10 +41,10 @@ public class TimerTasks {
                     groupId = group.getId();
                 }
             }
+            LOGGER.debug("已获取群ID-->"+groupId);
             if (groupId == 0) {
                 throw new RuntimeException("group id = 0");
             }
-            System.out.println("run!!!");
             String msg;
             if ((msg = WeatherInfoClient.getFormatWeatherInfo()) != null) {
                 try {
@@ -52,6 +66,13 @@ public class TimerTasks {
         }
     }
 
+    /**
+     * 构造方法
+     *
+     * @param client SmartQQClient实例
+     * @param args   定时参数
+     * @author : ning
+     **/
     public TimerTasks(SmartQQClient client, int[] args) {
         this.client = client;
         Calendar calendar = Calendar.getInstance();
@@ -72,7 +93,15 @@ public class TimerTasks {
         timer.schedule(task, date, PERIOD_DAY);
     }
 
+    /***
+     * 增加日期
+     * @author : ning
+     * @param date Date实例
+     * @return Date实例--java.util.Date
+     * @date :   2017/11/7
+     **/
     private Date addDay(Date date) {
+        LOGGER.debug("已增加日期");
         Calendar startDT = Calendar.getInstance();
         startDT.setTime(date);
         startDT.add(Calendar.DAY_OF_MONTH, 1);

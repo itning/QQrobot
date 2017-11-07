@@ -10,54 +10,58 @@ import top.itning.webqq.model.*;
 import java.io.IOException;
 import java.util.List;
 
+
 /**
- * @author ScienJus
- * @date 2015/12/18.
+ * 主入口
+ *
+ * @author wangn
  */
 public class Application {
+
     private static final Logger LOGGER = Logger.getLogger(Application.class);
-    private static final int SUCCESS_CODE = 200;
+
+    private static long User_ID = 0;
+    /**
+     * 关闭程序命令为 close
+     */
+    private static final String CLOSE_COMMAND = "close";
+
     /**
      * 创建一个新对象时需要扫描二维码登录，并且传一个处理接收到消息的回调，如果你不需要接收消息，可以传null
      */
     private static SmartQQClient client = new SmartQQClient(new MessageCallback() {
         @Override
         public void onMessage(Message message) {
-            System.out.println("onMessage-->" + message.getContent());
-            System.out.println(message);
-            if ("close".equals(message.getContent())) {
+            if (User_ID == message.getUserId() && CLOSE_COMMAND.equals(message.getContent())) {
                 close();
             }
         }
 
         @Override
         public void onGroupMessage(GroupMessage message) {
-            System.out.println("onGroupMessage-->" + message.getContent());
-            System.out.println(message);
+
         }
 
         @Override
         public void onDiscussMessage(DiscussMessage message) {
-            System.out.println("onDiscussMessage-->" + message.getContent());
-            System.out.println(message);
+
         }
     });
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        long userId = 0;
         List<Category> friendListWithCategory = client.getFriendListWithCategory();
         for (Category c : friendListWithCategory) {
             List<Friend> friends = c.getFriends();
             for (Friend friend : friends) {
                 if ("她姓许º".equals(friend.getNickname()) && friend.getUserId() != 1837634447) {
-                    userId = friend.getUserId();
+                    User_ID = friend.getUserId();
                 }
             }
         }
-        if (userId == 0) {
+        if (User_ID == 0) {
             throw new RuntimeException("user id = 0");
         }
-        System.out.println(userId);
+        LOGGER.debug("已获取到User_ID-->" + User_ID);
         if (args.length != 3) {
             LOGGER.error("args-->" + args.length);
             return;
@@ -66,13 +70,16 @@ public class Application {
         for (int i = 0; i < args.length; i++) {
             argsInt[i] = Integer.parseInt(args[i]);
         }
-        System.out.println(2);
-        client.sendMessageToFriend(userId, "已开启");
+        client.sendMessageToFriend(User_ID, "正在开启...");
         new TimerTasks(client, argsInt);
-        client.sendMessageToFriend(userId, "1");
-        System.out.println(2);
+        client.sendMessageToFriend(User_ID, "开启成功!");
     }
 
+    /***
+     * 程序关闭
+     * @author : ning
+     * @date :   2017/11/7
+     **/
     private static void close() {
         try {
             client.close();

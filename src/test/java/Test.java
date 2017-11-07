@@ -1,14 +1,14 @@
-
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import top.itning.curriculum.CurriculumClient;
-import top.itning.curriculum.CurriculumEnum;
-import top.itning.timer.TimerTasks;
 import top.itning.weather.entity.Weather;
 import top.itning.weather.entity.WeatherData;
 import top.itning.weather.entity.WeatherInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
+import java.util.concurrent.*;
 
 
 public class Test {
@@ -40,19 +40,35 @@ public class Test {
     }
 
     @org.junit.Test
-    public void tests(){
+    public void tests() {
         String classInfo = CurriculumClient.getClassInfo();
         System.out.println(classInfo.equals(""));
     }
+
     @org.junit.Test
-    public void testss(){
+    public void testss() {
         String ee = new SimpleDateFormat("F").format(new Date());
         System.out.println(ee);
     }
 
     @org.junit.Test
     public void testsss() throws InterruptedException {
-      // new TimerTasks();
-       Thread.sleep(999999);
+        // new TimerTasks();
+        Thread.sleep(999999);
+    }
+
+    @org.junit.Test
+    public void testa() throws InterruptedException {
+        ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(5);
+        scheduledThreadPool.scheduleAtFixedRate(
+                () ->{System.out.println("delay 1 seconds, and excute every 3 seconds");
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                },
+                0, 500, TimeUnit.MILLISECONDS);
+        Thread.sleep(999999);
     }
 }

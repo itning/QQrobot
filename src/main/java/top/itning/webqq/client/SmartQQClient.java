@@ -21,17 +21,24 @@ import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-/**
- * Api客户端.
+/***
  *
- * @author ScienJus
- * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @date 2015/12/18.
- */
+ * @author : ning
+ * @version : 1.0.0
+ * @date :   2017/11/7
+ **/
 public class SmartQQClient implements Closeable {
-
+    /**
+     * 分隔符
+     */
     private static final String SPLIT_SYMBOL = "','";
+    /**
+     * 失败码
+     */
     private static final int NOT_FOUNT_CODE = 404;
+    /**
+     * 成功码
+     */
     private static final int SUCCESS_CODE = 200;
     /**
      * 日志
