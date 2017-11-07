@@ -6,6 +6,7 @@ import top.itning.weather.entity.WeatherData;
 import top.itning.weather.entity.WeatherInfo;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -59,12 +60,23 @@ public class Test {
 
     @org.junit.Test
     public void testa() throws InterruptedException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 19);
+        calendar.set(Calendar.MINUTE, 16);
+        calendar.set(Calendar.SECOND, 0);
+        //第一次执行定时任务的时间
+        Date date = calendar.getTime();
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(2, namedThreadFactory);
         scheduledThreadPoolExecutor.scheduleAtFixedRate(() -> {
-
-        }, 0, 500, TimeUnit.MILLISECONDS);
+            System.out.println("111");
+        }, date.getTime(), 500, TimeUnit.MILLISECONDS);
         Thread.sleep(99999999);
+    }
+
+    @org.junit.Test
+    public void testb() throws InterruptedException {
+
     }
 
 }

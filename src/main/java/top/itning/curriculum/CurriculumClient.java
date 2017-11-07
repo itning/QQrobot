@@ -2,6 +2,7 @@ package top.itning.curriculum;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author wangn
@@ -11,7 +12,7 @@ public class CurriculumClient {
     }
 
     public static String getClassInfo() {
-        int day = Integer.parseInt(new SimpleDateFormat("F").format(new Date()));
+        int day = Integer.parseInt(new SimpleDateFormat("F", Locale.CHINESE).format(new Date()));
         String info = "";
         switch (day) {
             case 1:

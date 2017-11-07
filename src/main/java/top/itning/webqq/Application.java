@@ -21,6 +21,11 @@ public class Application {
     private static final Logger LOGGER = Logger.getLogger(Application.class);
 
     private static long User_ID = 0;
+
+    /**
+     * 程序应输入的参数 数
+     */
+    private static final int ARGS_LENGTH = 3;
     /**
      * 关闭程序命令为 close
      */
@@ -62,7 +67,7 @@ public class Application {
             throw new RuntimeException("user id = 0");
         }
         LOGGER.debug("已获取到User_ID-->" + User_ID);
-        if (args.length != 3) {
+        if (args.length != ARGS_LENGTH) {
             LOGGER.error("args-->" + args.length);
             return;
         }

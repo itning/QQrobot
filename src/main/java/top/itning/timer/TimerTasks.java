@@ -76,7 +76,6 @@ public class TimerTasks {
     public TimerTasks(SmartQQClient client, int[] args) {
         this.client = client;
         Calendar calendar = Calendar.getInstance();
-        //凌晨1点
         calendar.set(Calendar.HOUR_OF_DAY, args[0]);
         calendar.set(Calendar.MINUTE, args[1]);
         calendar.set(Calendar.SECOND, args[2]);
