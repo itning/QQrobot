@@ -1,6 +1,7 @@
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import top.itning.curriculum.CurriculumClient;
+import top.itning.util.PropertiesUtil;
 import top.itning.weather.entity.Weather;
 import top.itning.weather.entity.WeatherData;
 import top.itning.weather.entity.WeatherInfo;
@@ -8,8 +9,9 @@ import top.itning.weather.entity.WeatherInfo;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 
 public class Test {
@@ -48,14 +50,14 @@ public class Test {
 
     @org.junit.Test
     public void testss() {
-        String ee = new SimpleDateFormat("F").format(new Date());
+        String ee = new SimpleDateFormat("EE").format(new Date());
         System.out.println(ee);
     }
 
     @org.junit.Test
     public void testsss() throws InterruptedException {
-        // new TimerTasks();
-        Thread.sleep(999999);
+        String classInfo = CurriculumClient.getClassInfo();
+        System.out.println(classInfo);
     }
 
     @org.junit.Test
@@ -76,7 +78,8 @@ public class Test {
 
     @org.junit.Test
     public void testb() throws InterruptedException {
-
+        String adminName = PropertiesUtil.getValueByKey("groupName", "configurationInfo.properties");
+        System.out.println(adminName);
     }
 
 }

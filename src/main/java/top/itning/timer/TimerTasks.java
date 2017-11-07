@@ -3,6 +3,7 @@ package top.itning.timer;
 import net.dongliu.requests.exception.RequestException;
 import org.apache.log4j.Logger;
 import top.itning.curriculum.CurriculumClient;
+import top.itning.util.PropertiesUtil;
 import top.itning.weather.client.WeatherInfoClient;
 import top.itning.webqq.client.SmartQQClient;
 import top.itning.webqq.model.Group;
@@ -17,11 +18,17 @@ import java.util.*;
  **/
 public class TimerTasks {
     private static final Logger LOGGER = Logger.getLogger(TimerTasks.class);
+    /**
+     * 程序应输入的参数 数
+     */
+    private static final int ARGS_LENGTH = 3;
+
     private SmartQQClient client;
     /**
      * 重复周期;单位ms
+     * 24 * 60 * 60 * 1000
      */
-    private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
+    private static final long PERIOD_DAY = Long.parseLong(PropertiesUtil.getValueByKey("time_period", "configurationInfo.properties") == null ? "8640000" : PropertiesUtil.getValueByKey("time_period", "configurationInfo.properties"));
 
     /***
      * 任务线程
@@ -37,11 +44,11 @@ public class TimerTasks {
             long groupId = 0;
             List<Group> groupList = client.getGroupList();
             for (Group group : groupList) {
-                if ("╭ァ編徎縱扖門到瓬棄".equals(group.getName())) {
+                if (PropertiesUtil.getValueByKey("groupName", "configurationInfo.properties").equals(group.getName())) {
                     groupId = group.getId();
                 }
             }
-            LOGGER.debug("已获取群ID-->"+groupId);
+            LOGGER.debug("已获取群ID-->" + groupId);
             if (groupId == 0) {
                 throw new RuntimeException("group id = 0");
             }
@@ -69,15 +76,19 @@ public class TimerTasks {
      * 构造方法
      *
      * @param client SmartQQClient实例
-     * @param args   定时参数
      * @author : ning
      **/
-    public TimerTasks(SmartQQClient client, int[] args) {
+    public TimerTasks(SmartQQClient client) {
         this.client = client;
+        String[] runTimes = PropertiesUtil.getValueByKey("run_time", "configurationInfo.properties").split(":");
+        if (runTimes.length != ARGS_LENGTH) {
+            LOGGER.error("runTimes.length != 3-->" + runTimes.length);
+            System.exit(0);
+        }
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, args[0]);
-        calendar.set(Calendar.MINUTE, args[1]);
-        calendar.set(Calendar.SECOND, args[2]);
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(runTimes[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(runTimes[1]));
+        calendar.set(Calendar.SECOND, Integer.parseInt(runTimes[2]));
         //第一次执行定时任务的时间
         Date date = calendar.getTime();
         //如果第一次执行定时任务的时间 小于当前的时间

@@ -3,6 +3,7 @@ package top.itning;
 
 import org.apache.log4j.Logger;
 import top.itning.timer.TimerTasks;
+import top.itning.util.PropertiesUtil;
 import top.itning.webqq.callback.MessageCallback;
 import top.itning.webqq.client.SmartQQClient;
 import top.itning.webqq.model.*;
@@ -23,13 +24,9 @@ public class Application {
     private static long User_ID = 0;
 
     /**
-     * 程序应输入的参数 数
+     * 程序关闭命令
      */
-    private static final int ARGS_LENGTH = 3;
-    /**
-     * 关闭程序命令为 close
-     */
-    private static final String CLOSE_COMMAND = "close";
+    private static final String CLOSE_COMMAND = PropertiesUtil.getValueByKey("close_command", "configurationInfo.properties");
 
     /**
      * 创建一个新对象时需要扫描二维码登录，并且传一个处理接收到消息的回调，如果你不需要接收消息，可以传null
@@ -55,11 +52,12 @@ public class Application {
     });
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        String adminName = PropertiesUtil.getValueByKey("adminName", "configurationInfo.properties");
         List<Category> friendListWithCategory = client.getFriendListWithCategory();
         for (Category c : friendListWithCategory) {
             List<Friend> friends = c.getFriends();
             for (Friend friend : friends) {
-                if ("她姓许º".equals(friend.getNickname()) && friend.getUserId() != 1837634447) {
+                if (adminName.equals(friend.getNickname()) && friend.getUserId() != 1837634447) {
                     User_ID = friend.getUserId();
                 }
             }
@@ -69,16 +67,8 @@ public class Application {
         }
         LOGGER.debug("已获取到User_ID-->" + User_ID);
         client.sendMessageToFriend(User_ID, "已获取到User_ID-->" + User_ID);
-        if (args.length != ARGS_LENGTH) {
-            LOGGER.error("args-->" + args.length);
-            return;
-        }
-        int[] argsInt = new int[3];
-        for (int i = 0; i < args.length; i++) {
-            argsInt[i] = Integer.parseInt(args[i]);
-        }
         client.sendMessageToFriend(User_ID, "正在开启...");
-        new TimerTasks(client, argsInt);
+        new TimerTasks(client);
         client.sendMessageToFriend(User_ID, "开启成功!");
     }
 

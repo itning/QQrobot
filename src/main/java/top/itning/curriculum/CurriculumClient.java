@@ -12,26 +12,26 @@ public class CurriculumClient {
     }
 
     public static String getClassInfo() {
-        int day = Integer.parseInt(new SimpleDateFormat("F", Locale.CHINESE).format(new Date()));
+        String day = new SimpleDateFormat("E", Locale.CHINESE).format(new Date());
         String info = "";
         switch (day) {
-            case 1:
+            case "星期一":
                 info = CurriculumEnum.Monday.getClassInfo();
                 break;
-            case 2:
+            case "星期二":
                 info = CurriculumEnum.Tuesday.getClassInfo();
                 break;
-            case 3:
+            case "星期三":
                 info = CurriculumEnum.Wednesday.getClassInfo();
                 break;
-            case 4:
+            case "星期四":
                 info = CurriculumEnum.Thursday.getClassInfo();
                 break;
-            case 5:
+            case "星期五":
                 info = CurriculumEnum.Friday.getClassInfo();
                 break;
             default:
         }
-        return ((day != 6) ? "今天课程:\n" : "") + info + ((day == 5 || day == 6) ? "" : "晚自习:A301");
+        return ((!"星期六".equals(day)) ? "今天课程:\n" : "") + info + (("星期五".equals(day) || "星期六".equals(day)) ? "" : "晚自习:A301");
     }
 }
