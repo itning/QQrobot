@@ -12,22 +12,22 @@ public class CurriculumClient {
     }
 
     public static String getClassInfo() {
-        String day = new SimpleDateFormat("E", Locale.CHINESE).format(new Date());
+        String day = new SimpleDateFormat("EE", Locale.US).format(new Date());
         String info = "";
         switch (day) {
-            case "星期一":
+            case "Mon":
                 info = CurriculumEnum.Monday.getClassInfo();
                 break;
-            case "星期二":
+            case "Tue":
                 info = CurriculumEnum.Tuesday.getClassInfo();
                 break;
-            case "星期三":
+            case "Wed":
                 info = CurriculumEnum.Wednesday.getClassInfo();
                 break;
-            case "星期四":
+            case "Thu":
                 info = CurriculumEnum.Thursday.getClassInfo();
                 break;
-            case "星期五":
+            case "Fri":
                 info = CurriculumEnum.Friday.getClassInfo();
                 break;
             default:

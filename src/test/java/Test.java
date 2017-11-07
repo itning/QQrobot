@@ -9,6 +9,7 @@ import top.itning.weather.entity.WeatherInfo;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +59,13 @@ public class Test {
     public void testsss() throws InterruptedException {
         String classInfo = CurriculumClient.getClassInfo();
         System.out.println(classInfo);
+       /* Calendar calendar = Calendar.getInstance();
+        for(int i=1;i<8;i++){
+            calendar.set(Calendar.DAY_OF_WEEK, i);
+            //第一次执行定时任务的时间
+            Date date = calendar.getTime();
+            System.out.println(new SimpleDateFormat("EE", Locale.US).format(date));
+        }*/
     }
 
     @org.junit.Test
