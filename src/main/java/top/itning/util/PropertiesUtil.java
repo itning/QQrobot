@@ -1,9 +1,6 @@
 package top.itning.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Properties;
 
 /***
@@ -21,6 +18,7 @@ public class PropertiesUtil {
     public static String getValueByKey(String key, String url) {
         if (key != null) {
             try {
+                //PROPERTIES.load(new FileReader(""));
                 PROPERTIES.load(new InputStreamReader(new FileInputStream(url),"utf-8"));
             } catch (IOException e) {
                 System.err.println("url error");
